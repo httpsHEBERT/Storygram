@@ -1,33 +1,53 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs/lib/commonjs';
+import { StyleSheet } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feed from '../screens/Feed';
 import CreateStory from '../screens/CreateStory';
+import {RFValue} from 'react-native-responsive-fontsize';
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 const BottomTabNavigator = () => {
-  return (
-    <Tab.Navigator screenOptions={({route})=>({
-        tabBarIcon: ({focused, color, size})=>{
-            let iconName;
-            if(route.name === "Feed"){
-            iconName = focused ? "book" : "book-outline";
-            } else if(route.name === "Criar História") {
-            iconName = focused ? "create" : "create-outline";
-            }
-            return <Ionicons name={iconName} size={size} color={color}/>
+  return(
+    <Tab.Navigator 
+      labeled={false}
+      barStyle={styles.bottomTabStyle}
+      screenOptions={({route})=>({
+      tabBarIcon: ({focused, color, size})=>{
+        let iconName;
+        if(route.name === "Feed"){
+        iconName = focused ? "home" : "home-outline";
+        } else if(route.name === "Criar História") {
+        iconName = focused ? "add-circle" : "add-circle-outline";
         }
-        })}
-        tabBarOptions={{
-            activeTintColor: "tomato",
-            inactiveTintColor: "gray"
-        }}
-        >
-        <Tab.Screen name="Feed" component={Feed}/>
-        <Tab.Screen name="Criar História" component={CreateStory}/>
+        return <Ionicons name={iconName} size={RFValue(25)} color={color} style={styles.icon}/>
+      }
+      })}
+      tabBarOptions={{
+          activeTintColor: "#ee8240",
+          inactiveTintColor: "gray"
+      }}
+      >
+      <Tab.Screen name="Feed" component={Feed}/>
+      <Tab.Screen name="Criar História" component={CreateStory}/>
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  bottomTabStyle: {
+    backgroundColor: "#2f345d",
+    height: "8%",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    overflow: "hidden",
+    position: "absolute"
+  },
+  icon: {
+    width: RFValue(30),
+    height: RFValue(30)
+  }
+})
 
 export default BottomTabNavigator;
