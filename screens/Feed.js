@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, Image,
-         StatusBar, Platform } from 'react-native';
+import React, {Component} from 'react';
+import {Text, View, StyleSheet, SafeAreaView, Image,
+         StatusBar, Platform} from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from "expo-font";
-import { FlatList } from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
 import StoryCard from "./StoryCard";
 
 let stories = require("./temp.json")
@@ -30,7 +30,7 @@ export default class Feed extends Component {
     }
 
     renderItem = ({item: story}) => {
-        return <StoryCard story = {story}/>
+        return <StoryCard story = {story} navigation={this.props.navigation}/>
     }
 
     keyExtractor = (item, index) => index.toString();

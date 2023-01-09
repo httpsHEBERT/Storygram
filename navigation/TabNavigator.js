@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import {StyleSheet} from 'react-native';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feed from '../screens/Feed';
 import CreateStory from '../screens/CreateStory';
@@ -24,10 +24,8 @@ const BottomTabNavigator = () => {
         return <Ionicons name={iconName} size={RFValue(25)} color={color} style={styles.icon}/>
       }
       })}
-      tabBarOptions={{
-          activeTintColor: "#ee8240",
-          inactiveTintColor: "gray"
-      }}
+        activeColor={"#ee8249"}
+        inactiveColor={"gray"}
       >
       <Tab.Screen name="Feed" component={Feed}/>
       <Tab.Screen name="Criar História" component={CreateStory}/>
@@ -42,7 +40,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     overflow: "hidden",
-    position: "absolute"
+    position: "absolute",
   },
   icon: {
     width: RFValue(30),
