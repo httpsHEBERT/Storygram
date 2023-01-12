@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, SafeAreaView, Platform,
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Font from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
+import firebase from "firebase";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -15,7 +16,8 @@ export default class StoryCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fontsLoaded: false
+      fontsLoaded: false,
+      light_theme: true
     };
   }
 
@@ -26,6 +28,18 @@ export default class StoryCard extends Component {
 
   componentDidMount() {
     this._loadFontsAsync();
+    this.fetchUser();
+  }
+
+  fetchUser = () => {
+    let theme;
+    firebase
+      .database()
+      .ref("/users/" + firebase.auth().currentUser.uid)
+      .on("value", snapshot => {
+        theme = snapshot.val().current_theme;
+        this.setState({ light_theme: theme === "light" });
+      });
   }
 
   render() {
@@ -36,11 +50,11 @@ export default class StoryCard extends Component {
         <TouchableOpacity
           style={styles.container}
           onPress={() => this.props.navigation.navigate(
-            "Tela de Histórias", {story: this.porps.story}
+            "StoryScreen", {story: this.props.story}
           )}  
         >
           <SafeAreaView style={styles.droidSafeArea}/>
-            <View style={styles.cardContainer}>
+            <View style={this.state.light_theme ? styles.cardContainerLight : styles.cardContainer}>
                 <Image source={require("../assets/story_image_1.png")}
                        style={{
                         resizeMode:"contain",
@@ -51,33 +65,36 @@ export default class StoryCard extends Component {
               <View style={styles.titleContainer}>
                 <View style={styles.titleTextContainer}>
                   <View style={styles.storyTitle}>
-                    <Text style={styles.storyTitleText}>
+                    <Text style={this.state.light_theme ? styles.storyTitleTextLight : styles.storyTitleText}>
                     {this.props.story.title}
                     </Text>
                   </View>
                   <View style={styles.storyAuthor}>
-                    <Text style={styles.storyAuthorText}>
+                    <Text style={this.state.light_theme ? styles.storyAuthorTextLight : styles.storyAuthorText}>
                       {this.props.story.author}
                     </Text>
                   </View>
                 </View>
               </View>
-                <Text style={styles.descriptionText}>
+                <Text style={this.state.light_theme ? styles.descriptionTextLight : styles.descriptionText}>
                 {this.props.story.description}
                 </Text>
               <View style={styles.actionContainer}>
                 <View style={styles.likeButton}>
                   <View style={styles.likeIcon}>
-                    <Ionicons name={"heart"}
-                              size={30}
-                              color={"white"}
-                              style={{width: 30,
-                                      marginLeft: 20,
-                                      marginTop: 5}}
+                    <Ionicons 
+                      name={"heart"}
+                      size={30}
+                      color={this.state.light_theme ? "#f2f2f2" : "white"}
+                      style={{
+                        width: 30,
+                        marginLeft: 20,
+                        marginTop: 5
+                      }}
                     />
                     </View>
                     <View>
-                      <Text style={styles.likeText}>12k</Text>
+                      <Text style={this.state.light_theme ? styles.likeTextLight : styles.likeText}>12k</Text>
                     </View>
                   </View>
                 </View>
@@ -101,6 +118,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10
   },
+  cardContainerLight: {
+    margin: 13,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 20,
+    padding: 10
+  },
   titleTextContainer: {
     flex: 1
   },
@@ -113,15 +136,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white"
   },
+  storyTitleTextLight: {
+    fontFamily: "Bubblegum-Sans",
+    fontSize: 20,
+    color: "#2f345d"
+  },
   storyAuthorText: {
     fontFamily: "Bubblegum-Sans",
     fontSize: 18,
     color: "white"
   },
+  storyAuthorTextLight: {
+    fontFamily: "Bubblegum-Sans",
+    fontSize: 18,
+    color: "#2f345d"
+  },
   descriptionText: {
     fontFamily: "Bubblegum-Sans",
     fontSize: 13,
     color: "white",
+    padding: 10,
+  },
+  descriptionTextLight: {
+    fontFamily: "Bubblegum-Sans",
+    fontSize: 13,
+    color: "#2f345d",
     padding: 10,
   },
   actionContainer: {
@@ -140,6 +179,13 @@ const styles = StyleSheet.create({
   },
   likeText: {
     color: "white",
+    fontFamily: "Bubblegum-Sans",
+    fontSize: 25,
+    marginLeft: 5,
+    marginTop: 6,
+  },
+  likeTextLight: {
+    color: "#f2f2f2",
     fontFamily: "Bubblegum-Sans",
     fontSize: 25,
     marginLeft: 5,
